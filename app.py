@@ -29,7 +29,7 @@ from tkinter import messagebox
 
 
 
-uri = "mongodb+srv://mohitapte4:j3ZsXs6FGCnGATZm@cluster0.xmn1i2w.mongodb.net/?retryWrites=true&w=majority"
+uri = "mongodb+srv://mohitapte4:<password>@cluster0.xmn1i2w.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(uri, server_api=ServerApi('1'))
 def validateLogin(username, password):
     if username.get() == 'DR' and password.get()=="DR":
