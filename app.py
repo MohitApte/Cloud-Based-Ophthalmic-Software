@@ -27,19 +27,7 @@ import io
 from docx.shared import Inches
 from tkinter import messagebox
 
-class Patient:
-    def __init__(self,mrd,fn,mn,ln,age,sex,address,mob,land,misc):
-        self.mrd = mrd
-        self.fn = fn
-        self.mn = mn
-        self.ln = ln
-        self.age = age
-        self.sex = sex
-        self.address = address
-        self.mob = mob
-        self.land = land
-        self.misc = misc
-    
+
 
 uri = "mongodb+srv://mohitapte4:j3ZsXs6FGCnGATZm@cluster0.xmn1i2w.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(uri, server_api=ServerApi('1'))
@@ -103,7 +91,7 @@ def new_patient():
     def validateSubmit(mrd,fn,mn,ln,age,sex,address,mob,land,misc):
         today = datetime.date.today()
         
-        if ((mob.get().isdigit) and (land.get().isdigit) and age.get().isdigit()) and fn.get().isalpha() and mn.get().isalpha() and ln.get().isalpha() and sex.get().isalpha():
+        if ((mob.get().isdigit()) and (land.get().isdigit()) and age.get().isdigit()) and fn.get().isalpha() and mn.get().isalpha() and ln.get().isalpha() and sex.get().isalpha() and address.get().isalnum():
             today_string = today.strftime('%d/%m/%Y')
             document = {"MRD":mrd.get(),"first_name":fn.get(),"middle_name":mn.get(),
                         "last_name":ln.get(),"age":age.get(),"sex":sex.get(),"address":address.get(),"mobile_no":mob.get(),
@@ -166,7 +154,7 @@ def new_patient():
             db = client.get_database('patient_data')
             collection = db['patient_name_age']
             collection.insert_one(document)
-            new_pat= Patient(mrd.get(),fn.get(),mn.get(),ln.get(),age.get(),sex.get(),address.get(),mob.get(),land.get(),misc.get())
+            
             cursor = collection.find({"$and": [
                                 {"MRD": {"$regex": mrd.get(), "$options": "i"}},
                                 {"first_name": {"$regex": fn.get(), "$options": "i"}},
@@ -193,7 +181,13 @@ def new_patient():
     mrdLabel = ttk.Label(tab1, text="MRD Number").grid(row=0, column=0)
     mrd = StringVar()
     mrdEntry = ttk.Entry(tab1, textvariable=mrd).grid(row=0, column=1)
-
+    import random
+    today = datetime.date.today()
+    new_day = today.day
+    mrd_str = str(new_day)+str(random.randint(100000, 999999))
+    mrd.set(mrd_str)
+    
+    
     fnLabel = ttk.Label(tab1, text="First Name").grid(row=2, column=0)
     fn = StringVar()
     fnEntry = ttk.Entry(tab1, textvariable=fn).grid(row=2, column=1) 
@@ -256,7 +250,7 @@ def old_patient():
                                 {"middle_name": {"$regex": mn.get(), "$options": "i"}},
                                 {"last_name": {"$regex": ln.get(), "$options": "i"}},
                                 {"age": {"$regex": age.get(), "$options": "i"}},
-                                {"sex": {"$regex": sex.get(), "$options": "i"}},
+                                {"sex": {"$regex": sex.get()}},
                                 {"address": {"$regex": address.get(), "$options": "i"}},
                                 {"mobile_no": {"$regex": mob.get(), "$options": "i"}},
                                 {"land_no": {"$regex": land.get(), "$options": "i"}},
@@ -413,7 +407,6 @@ def main_page():
                     # Store the image in MongoDB
                     with open(filename, "rb") as f:
                         img_data = f.read()
-                        print(type(img_data))
                         #print(img_data)
                     
                     
@@ -555,7 +548,10 @@ def main_page():
                     days.append(vari[str(i+2)+"daystxt"].get())
                     dwm.append(vari[str(i+2)+"dwmtxt"].get())
                     qty.append(vari[str(i+2)+"qtytxt"].get())
-
+                    
+                print(x)   
+                print(medname)
+            
             
             button = ttk.Button(medicine, text="New", command=add_more)
             button.grid(row = 12, column= 2, sticky=tk.S)
@@ -622,23 +618,23 @@ def main_page():
             def nums(event, field_txt):
                 num_win = Toplevel(root)
                 num_win.geometry("700x700")
-                button1 = ttk.Button(num_win, text="0.05", command=lambda val=str(0.05): insertValue(val,field_txt,num_win))
+                button1 = ttk.Button(num_win, text="0.75", command=lambda val=str(0.75): insertValue(val,field_txt,num_win))
                 button1.grid(row=0, column=0)
                 button2 = ttk.Button(num_win, text="0.1", command=lambda val=str(0.1): insertValue(val,field_txt,num_win))
                 button2.grid(row=0, column=1)
-                button3 = ttk.Button(num_win, text="0.15", command=lambda val=str(0.15): insertValue(val,field_txt,num_win))
+                button3 = ttk.Button(num_win, text="0.2", command=lambda val=str(0.2): insertValue(val,field_txt,num_win))
                 button3.grid(row=0, column=2)
                 button4 = ttk.Button(num_win, text="0.25", command=lambda val=str(0.25): insertValue(val,field_txt,num_win))
                 button4.grid(row=0, column=3)
-                button5 = ttk.Button(num_win, text="0.35", command=lambda val=str(0.35): insertValue(val,field_txt,num_win))
+                button5 = ttk.Button(num_win, text="0.3", command=lambda val=str(0.3): insertValue(val,field_txt,num_win))
                 button5.grid(row=0, column=4)
-                button6 = ttk.Button(num_win, text="0.45", command=lambda val=str(0.45): insertValue(val,field_txt,num_win))
+                button6 = ttk.Button(num_win, text="0.35", command=lambda val=str(0.35): insertValue(val,field_txt,num_win))
                 button6.grid(row=0, column=5)
-                button7 = ttk.Button(num_win, text="0.55", command=lambda val=str(0.55): insertValue(val,field_txt,num_win))
+                button7 = ttk.Button(num_win, text="0.4", command=lambda val=str(0.4): insertValue(val,field_txt,num_win))
                 button7.grid(row=1, column=0)
-                button8 = ttk.Button(num_win, text="0.65", command=lambda val=str(0.65): insertValue(val,field_txt,num_win))
+                button8 = ttk.Button(num_win, text="0.45", command=lambda val=str(0.45): insertValue(val,field_txt,num_win))
                 button8.grid(row=1, column=1)
-                button9 = ttk.Button(num_win, text="0.75", command=lambda val=str(0.75): insertValue(val,field_txt,num_win))
+                button9 = ttk.Button(num_win, text="0.5", command=lambda val=str(0.5): insertValue(val,field_txt,num_win))
                 button9.grid(row=1, column=2)
                 
             patient_info_frame = ttk.LabelFrame(prescription, text = "Patient Information")
@@ -784,7 +780,7 @@ def main_page():
             
             ldvtxt = Entry(glass_prescription_frame, width=5)
             ldvtxt.grid(row=2, column=8)
-            ldvtxt.bind("<Double-Button-1>", lambda event: nums(event, fieldtxt), add="+")
+            ldvtxt.bind("<Double-Button-1>", lambda event: nums(event, ldvtxt), add="+")
             
             
             lcstxt = Entry(glass_prescription_frame, width=5)
@@ -961,7 +957,7 @@ def main_page():
         history = document['history']
         advised = document['advised'] 
             
-            
+        ttk.Label(patient_detail_frame, text="COMPLAINTS").grid(row=3, column=0)
         complaintxt = Text(patient_detail_frame, height = 10,
                         width = 25,
                         bg = "light yellow")
@@ -977,17 +973,19 @@ def main_page():
         
         
         
-        
+        ttk.Label(patient_detail_frame, text="HISTORY").grid(row=5, column=0)
         historytxt = Text(patient_detail_frame, height = 10,
                         width = 25,
                         bg = "light yellow")
         
-        historytxt.grid(row=5, column=0)
+        historytxt.grid(row=6, column=0)
         
         historytxt.insert(END, "history")
         historytxt.bind("<Double-Button-1>", history, add="+")
         
         
+        
+        ttk.Label(patient_detail_frame, text="EXAMINATION").grid(row=3, column=1)
         examtxt = Text(patient_detail_frame, height = 10,
                         width = 25,
                         bg = "light yellow")
@@ -997,15 +995,19 @@ def main_page():
         examtxt.insert(END, "examination")
         examtxt.bind("<Double-Button-1>", exam, add="+")
         
+        
+        ttk.Label(patient_detail_frame, text="DIAGRAM").grid(row=5, column=1)
         diagramtxt = Text(patient_detail_frame, height = 10,
                         width = 25,
                         bg = "light yellow")
         
-        diagramtxt.grid(row=5, column=1)
+        diagramtxt.grid(row=6, column=1)
         
         diagramtxt.insert(END, "Diagram")
         diagramtxt.bind("<Double-Button-1>", diagram, add="+")
             
+        
+        ttk.Label(patient_detail_frame, text="DIAGNOSIS").grid(row=3, column=2)
         diagnosistxt = Text(patient_detail_frame, height = 10,
                         width = 25,
                         bg = "light yellow")
@@ -1015,16 +1017,19 @@ def main_page():
         diagnosistxt.insert(END, "diagnosis")
         diagnosistxt.bind("<Double-Button-1>", diagnosis, add="+")
         
+        
+        ttk.Label(patient_detail_frame, text="ADVISED").grid(row=5, column=2)
         advisedtxt = Text(patient_detail_frame, height = 10,
                         width = 25,
                         bg = "light yellow")
         
-        advisedtxt.grid(row=5, column=2)
+        advisedtxt.grid(row=6, column=2)
         
         advisedtxt.insert(END, "advised")
         advisedtxt.bind("<Double-Button-1>", advised, add="+")
         
         
+        ttk.Label(patient_detail_frame, text="MEDICINE").grid(row=3, column=3)
         medicinetxt = Text(patient_detail_frame, height = 10,
                         width = 25,
                         bg = "light yellow")
@@ -1035,12 +1040,12 @@ def main_page():
         medicinetxt.bind("<Double-Button-1>", chief_medicine, add="+")
         
         
-        
+        ttk.Label(patient_detail_frame, text="PRESCRIPTION").grid(row=5, column=3)
         prescriptiontxt = Text(patient_detail_frame, height = 10,
                         width = 25,
                         bg = "light yellow")
         
-        prescriptiontxt.grid(row=5, column=3)
+        prescriptiontxt.grid(row=6, column=3)
         
         prescriptiontxt.insert(END, "Prescription:")
         prescriptiontxt.bind("<Double-Button-1>", prescription, add="+")
@@ -1093,7 +1098,7 @@ def main_page():
             source_dict['dwm'] = dwm
             source_dict['qty'] = qty
             source_dict['img_data'] = img_data
-            #print(img_data)            
+            print(img_data)            
             collection.insert_one(source_dict)
         
         
@@ -1151,23 +1156,16 @@ def main_page():
                     doc = Document()
                     doc.add_paragraph(string)
                     
-                    bin_data  = document['img_data']
-                    print(type(bin_data))
-                    new_data = str(bin_data)
-                    print(new_data)
-                    
-                    #image_data = bin_data.split("('", 1)[1].rstrip(')')
+                        
 
-                    try:
-                        
-                        image_stream = io.BytesIO(bin_data)
-                        paragraph = doc.add_paragraph()
-                        run = paragraph.add_run()
-                        
-                        # Insert the image into the run
-                        run.add_picture(image_stream, width=Inches(4))  
-                    except:
-                        pass
+                    bin_data  = document['img_data']
+                    print(bin_data)
+                    image_stream = io.BytesIO(bin_data)
+                    paragraph = doc.add_paragraph()
+                    run = paragraph.add_run()
+                    
+                    # Insert the image into the run
+                    run.add_picture(image_stream, width=Inches(4))  
                     
                     doc.save(output_path)
 
@@ -1242,6 +1240,8 @@ def main_page():
         patient_detail_ipd = ttk.LabelFrame(tab2, text = "Patient Details IPD")
         patient_detail_ipd.grid(row = 4, column = 0)
         
+        
+        ttk.Label(patient_detail_ipd, text="Clinical Findings").grid(row=3, column=0)
         cftxt = Text(patient_detail_ipd, height = 10,
                         width = 25,
                         bg = "light yellow")
@@ -1251,15 +1251,18 @@ def main_page():
         cftxt.insert(END, "Clinical Findings")
         
         
+        ttk.Label(patient_detail_ipd, text="Operation Notes").grid(row=5, column=0)
         opnotestxt = Text(patient_detail_ipd, height = 10,
                         width = 25,
                         bg = "light yellow")
         
-        opnotestxt.grid(row=5, column=0)
+        opnotestxt.grid(row=6, column=0)
         
         opnotestxt.insert(END, "Operation Notes")
         
         
+        
+        ttk.Label(patient_detail_ipd, text="Invesitgation").grid(row=3, column=1)
         investigationtxt = Text(patient_detail_ipd, height = 10,
                         width = 25,
                         bg = "light yellow")
@@ -1268,15 +1271,19 @@ def main_page():
         
         investigationtxt.insert(END, "Invesitgation")
         
+        
+        ttk.Label(patient_detail_ipd, text="Post Operative Medicines").grid(row=5, column=1)
         postmedicinetxt = Text(patient_detail_ipd, height = 10,
                         width = 25,
                         bg = "light yellow")
         
-        postmedicinetxt.grid(row=5, column=1)
+        postmedicinetxt.grid(row=6, column=1)
         
         postmedicinetxt.insert(END, "Post Operative Medicines")
 
-            
+        
+
+        ttk.Label(patient_detail_ipd, text="Surgery Advising").grid(row=3, column=2)
         surgeryadvisingtxt = Text(patient_detail_ipd, height = 10,
                         width = 25,
                         bg = "light yellow")
@@ -1285,11 +1292,12 @@ def main_page():
         
         surgeryadvisingtxt.insert(END, "Surgery Advising")
         
+        ttk.Label(patient_detail_ipd, text="Advice on Discharge").grid(row=5, column=2)
         adviseondischargetxt = Text(patient_detail_ipd, height = 10,
                         width = 25,
                         bg = "light yellow")
         
-        adviseondischargetxt.grid(row=5, column=2)
+        adviseondischargetxt.grid(row=6, column=2)
         
         adviseondischargetxt.insert(END, "Advice on Discharge")
         
